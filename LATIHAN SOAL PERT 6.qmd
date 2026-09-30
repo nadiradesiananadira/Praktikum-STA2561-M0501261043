@@ -1,0 +1,299 @@
+---
+title: "Latihan Soal Pertemuan 6"
+subtitle: "Pemograman Statistika"
+author: "Nadira Desiana Noviyanti Margaretha"
+date: today
+date-format: "D MMMM YYYY"
+format:
+  html:
+    toc: true
+    toc-title: "Daftar Isi"
+    toc-location: right
+    toc-depth: 2
+    number-sections: false
+    theme: cosmo
+    highlight-style: github
+    code-fold: false
+    code-tools: false
+    code-copy: true
+    embed-resources: true
+    smooth-scroll: true
+execute:
+  warning: false
+  message: false
+---
+
+## G.1. Membuat fungsi range_data()
+
+Buat fungsi `range_data()` yang menghitung:
+
+$$
+R = max(x)-min(x)
+$$
+
+Gunakan data:
+
+```         
+x <- c(10, 12, 15, 18, 20)
+```
+
+Kemudian uji fungsi dengan:
+
+```         
+range_data(x)
+```
+
+**Jawaban :**
+
+```{r}
+#| echo: true
+range_data <- function(x) {
+  R <- max(x)-min(x)
+  return(R)
+}
+
+range_data(c(10, 12, 15, 18, 20))
+```
+
+## G.2. Membuat fungsi nilai_tengah()
+
+Buat fungsi `nilai_tengah()` untuk menghitung nilai tengah antara nilai minimum dan maksimum:
+
+$$
+T = \frac{max(x) + min(x)}{2}
+$$
+
+Gunakan data berikut:
+
+```         
+x <- c(8, 12, 15, 20, 25)
+```
+
+Kemudian uji fungsi dengan:
+
+```         
+nilai_tengah(x)
+```
+
+**Jawaban :**
+
+```{r}
+#| echo: true
+nilai_tengah <- function(x) {
+  T <- (max(x)+min(x))/2
+  return(T)
+}
+nilai_tengah(c(8, 12, 15, 20, 25))
+```
+
+## G.3. Membuat fungsi cv_data()
+
+Buat fungsi:
+
+```         
+cv_data <- function(x, na.rm = FALSE) {   
+           ... }
+```
+
+untuk menghitung *coefficient of variation*:
+
+$$
+CV = \frac{s}{\bar{x}} \times 100
+$$
+
+Gunakan data :
+
+```         
+x <- c(10, 15, NA, 20, 25)
+```
+
+Kemudian bandingkan hasil:
+
+```         
+cv_data(x) 
+cv_data(x, na.rm = TRUE)
+```
+
+**Jawaban :**
+
+```{r}
+#| echo: true
+# Untuk cv_data(x)
+cv_data <- function(x, na.rm = FALSE) {
+  c(
+    X <- mean(x, na.rm = FALSE),
+    s <- sd(x, na.rm = FALSE),
+    cv <- ((s/X)*100)
+  )
+}
+
+cv_data(c(10, 15, NA, 20, 25))
+```
+
+*Output* menghasilkan nilai `NA` pada `cv_data()`.
+
+```{r}
+# Untuk cv_data(x, na.rm = TRUE)
+cv_data <- function(x, na.rm = TRUE) {
+  c(
+    X <- mean(x, na.rm = TRUE),
+    s <- sd(x, na.rm = TRUE),
+    cv <- ((s/X)*100)
+  )
+}
+
+cv_data(c(10, 15, NA, 20, 25))
+```
+
+Sedangkan dengan `na.rm = TRUE` program akan menghasilkan output `cv_data()` bernilai 36.885556.
+
+## G.4. Membuat fungsi ringkasan_data()
+
+Buat fungsi `ringkasan_data()` yang menghasilkan:
+
+- mean;
+- standard deviation;
+- minimum; dan
+- maximum.
+- Gunakan `...` agar argumen tambahan seperti `na.rm = TRUE` dapat diteruskan ke fungsi statistik.
+
+Uji dengan:
+
+```         
+x <- c(10, 15, NA, 20, 25, 30)  
+ringkasan_data(x, na.rm = TRUE)
+```
+
+**Jawaban :**
+
+```{r}
+#| echo: true
+ringkasan_data <- function(x,...) {
+  c(
+    mean = mean(x, ...),
+    standardeviation = sd(x, ...),
+    minimum = min(x,...),
+    maximum = max(x,...)
+  )
+}
+x <- c(10, 15, NA, 20, 25, 30)
+ringkasan_data(x, na.rm = TRUE)
+```
+
+## G.5. Membuat fungsi safe_sd()
+
+Gunakan data berikut:
+
+```         
+data_list <- list(   
+  A = c(5, 10, 15),   
+  B = c(20, 25, 30),   
+  C = "data salah",   
+  D = c(35, 40, 45) )
+```
+
+Buat fungsi:
+
+```         
+safe_sd <- function(x) { 
+  tryCatch(     
+  sd(x),     
+  error = function(e) NA   
+  ) }
+```
+
+Kemudian jalankan:
+
+```         
+lapply(data_list, safe_sd)
+```
+
+Jawab pertanyaan berikut:
+
+- Kelompok mana yang menghasilkan `NA`?
+- Mengapa kelompok lain tetap dapat diproses?
+- Apa fungsi `tryCatch()` pada contoh tersebut?
+
+**Jawaban :**
+
+```{r}
+# Percobaan Runnning
+data_list <- list(
+  A = c(5,10,15),
+  B = c(20,25,30),
+  C = "data salah",
+  D = c(35,40,45)
+)
+
+safe_sd <- function(x) {
+  tryCatch(
+    sd(x),
+    error = function(e) NA
+  )
+}
+
+lapply(data_list, safe_sd)
+```
+
+- Kelompok yang menghasilkan `NA` adalah Kelompok C
+
+- Karena terdapat `character` pada Kelompok C sedangkan pada Kelompok yang lain berupa `numerik`.
+
+- Fungsi `tryCatch()` pada contoh tersebut adalah untuk menangkap *`error`* yang terjadi saat suatu operasi gagal dijalankan agar eksekusi kode tetap berlanjut sampai akhir. Karena pada pada saat `x` berisi teks `"data salah"`, perintah `sd("data salah")` sistem sempat menghasilkan *`error`*. Namun, sebelum *`error`* tersebut menghentikan seluruh alur eksekusi program, fungsi `tryCatch()` langsung menangkap *`error`* tersebut dan menjadikannya nilai `NA`.
+
+## G.6. Membuat fungsi buat_penambah()
+
+Buat fungsi:
+
+```         
+buat_penambah <- function(k) {
+  function(x) {     
+    x + k   
+  } 
+}
+```
+
+Kemudian buat:
+
+```         
+tambah5 <- buat_penambah(5) 
+tambah10 <- buat_penambah(10)
+```
+
+Uji dengan:
+
+```         
+tambah5(20) 
+tambah10(20)
+```
+
+Jawab pertanyaan berikut:
+
+- Berapa hasil `tambah5(20)` dan `tambah10(20)`?
+
+- Mengapa `tambah5()` masih mengetahui bahwa nilai `k = 5`?
+
+- Konsep apa yang menjelaskan kemampuan fungsi tersebut untuk tetap mengingat nilai `k`?
+
+**Jawaban :**
+
+```{r}
+#| echo: true
+# Percobaan Running
+buat_penambah <- function(k) {   
+  function(x) {     
+    x + k   
+  } 
+}
+tambah5 <- buat_penambah(5) 
+tambah10 <- buat_penambah(10)
+
+tambah5(20) 
+tambah10(20)
+```
+
+- Hasil dari `tambah5(20)` adalah 25 dan hasil dari `tambah10(20)` adalah 30.
+
+- `tambah5()` masih dapat mengetahui nilai `k = 5` karena saat fungsi `buat_penambah(5)` dijalankan, R tidak hanya mengembalikan `function(x)`, tetapi juga menyimpan *environment* tempat `function(x)` tersebut dibuat, dengan nilai `k` bernilai 5.
+
+- Konsep yang menjelaskan kemampuan fungsi tersebut untuk tetap mengingat nilai `k` adalah **Closure** (yang bekerja berdasarkan aturan `Lexical Scoping`). **Closure** terjadi ketika sebuah fungsi internal (*inner function*) "menangkap" dan mengingat variabel dari *environment* fungsi pembungkusnya (*outer function*), bahkan setelah fungsi pembungkus tersebut selesai dieksekusi.
